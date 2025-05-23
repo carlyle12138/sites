@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绿色城市未来 | Green City Futures</title>
+    <!-- 依赖库 -->
+    <script>MathJax={chtml:{fontURL:'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        /* ——基础排版与配色—— */
+        html,body{height:100%;margin:0;scroll-behavior:smooth}
+        body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#374151;padding:10px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+        .container{max-width:1100px;margin:0 auto;padding:20px;background-color:#fff;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06)}
+        h1,h2,h3,h4,h5{display:flex;align-items:center;margin:1.8em 0 1em;font-weight:600;line-height:1.3;color:#1f2937}
+        h1{font-size:2.6rem;border-bottom:1px solid #dde2e9;padding-bottom:.5em}
+        h2{font-size:2.1rem;border-bottom:1px solid #eef2f5;padding-bottom:.55em}
+        h3{font-size:1.7rem}
+        h4{font-size:1.35rem;color:#525860}
+        h5{font-size:1.15rem;color:#1f2937}
+        p{margin-bottom:1.4em;color:#4b5563;font-size:1.05rem}
+        strong{font-weight:600;color:#007bff}
+        :not(pre)>code{background:#e9ecef;padding:.2em .4em;border-radius:.25rem;font-family:"Fira Code";font-size:.9em;color:#bf0045}
+        /* ——色彩强调—— */
+        .text-primary{color:#007bff}.text-success{color:#28a745}.text-warning{color:#ff8f00}.text-danger{color:#dc3545}.text-accent{color:#20c997}
+        /* ——卡片与代码块—— */
+        .section-card{background:#f0f3f7;border:1px solid #cbd5e0;border-radius:.45rem;padding:25px;margin:30px 0}
+        pre[class*=language-]{padding:1.7em;margin:1.2em 0;overflow:auto;border-radius:.45rem;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #dde2e9;background:#2d2d2d;font-size:.93rem;line-height:1.5}
+        /* ——Graphviz 容器—— */
+        #graph-container{width:100%;max-width:900px;margin:30px auto;padding-top:70px;background:#fff;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);position:relative;overflow:hidden}
+        #graph-output{display:flex;justify-content:center;align-items:center;min-height:450px;padding:30px}
+        #graph-output svg{width:100%;height:auto}
+        #graph-controls-container{position:absolute;top:20px;right:20px;display:flex;gap:14px;z-index:10}
+        .graph-button{padding:9px 15px;background:rgba(50,50,50,.8);color:#f0f4f8;border:none;border-radius:.35rem;cursor:pointer;font-size:.88rem;display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+        .graph-button:hover{background:rgba(30,30,30,.9)}
+        .graph-button .material-icons-outlined{font-size:1.4em}
+        /* ——ECharts 简易占位—— */
+        #chart{width:100%;height:380px;margin:40px 0;border:1px solid #dfe5ec;border-radius:.45rem}
+        /* ——媒体查询略 —— */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="material-icons-outlined" aria-hidden="true">eco</span> 绿色城市未来 <span class="text-accent">Green City Futures</span></h1>
+
+        <!-- 简介 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">lightbulb</span> 为什么选择绿色城市？</h2>
+            <p>世界正迅速城市化，而 <strong class="text-warning">城市热岛</strong> 与 <strong class="text-danger">极端天气</strong> 对公共健康与基础设施构成挑战。绿色基础设施——如绿色屋顶、垂直森林与海绵城市——为城市降温、减碳并提升宜居性提供可靠路径。</p>
+            <p class="section-card"><strong>碳足迹公式：</strong>行内公式 $C = \displaystyle\sum E_i \\times EF_i$ 用于估算家庭或建筑的年度碳排放，其中 <code>E_i</code> 表示能源消耗量，<code>EF_i</code> 为排放因子。</p>
+        </section>
+
+        <!-- 绿色屋顶 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">roofing</span> 绿色屋顶</h2>
+            <p>绿色屋顶可降低屋面温度，减少建筑逐年制冷负荷，同时增加城市绿地面积与生物多样性。美国 EPA 报告显示，成熟的绿色屋顶可 <strong class="text-success">降低室外温度 1–5 °C</strong>，屋面表面温度最高降幅可达 40 °C。</p>
+            <pre><code class="language-python"># 简易估算绿色屋顶每年节省的空调电量
+def cooling_savings(area_m2, temp_reduction_C, ac_cop=3.2):
+    """
+    area_m2            : 屋顶面积 (m^2)
+    temp_reduction_C   : 平均降温 (°C)
+    ac_cop             : 空调能效比
+    返回值             : kWh/年
+    """
+    # 假设每平米每降低 1°C，全年可省 2.5 kWh
+    raw_saving = area_m2 * temp_reduction_C * 2.5
+    return raw_saving * (ac_cop / 3.2)
+
+print(cooling_savings(800, 3))</code></pre>
+        </section>
+
+        <!-- 垂直森林 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">forest</span> 垂直森林</h2>
+            <p>传统绿地有限的城市中心，可通过外立面绿化打造 <em>垂直森林</em>。意大利米兰的「垂直森林住宅」种植 900 株树木与 20,000 余株灌木，每年吸收约 30 吨 CO_2，并显著提升室内热舒适度。</p>
+        </section>
+
+        <!-- 海绵城市 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">water_drop</span> 海绵城市雨洪管理</h2>
+            <p>海绵城市概念强调让城市像海绵一样“渗、滞、蓄、净、用、排”。以下流程图展示雨水从降落到再利用的关键环节。</p>
+            <div id="graph-container">
+                <div id="graph-controls-container">
+                    <button id="zoom-button" class="graph-button"><span class="material-icons-outlined" aria-hidden="true">zoom_out_map</span> 全屏</button>
+                    <button id="layout-toggle-button" class="graph-button" title="切换布局方向"></button>
+                    <button id="download-button" class="graph-button"><span class="material-icons-outlined" aria-hidden="true">download</span> 下载</button>
+                </div>
+                <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+            </div>
+            <div id="zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-modal-title" style="display:none">
+                <div id="zoom-content"></div>
+                <button id="close-zoom" title="关闭全屏" aria-label="关闭全屏"><span class="material-icons-outlined" aria-hidden="true">close</span></button>
+                <h2 id="zoom-modal-title" style="display:none">图表全屏交互视图</h2>
+            </div>
+        </section>
+
+        <!-- 热岛折线图 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">thermostat</span> 城市热岛温差示意</h2>
+            <p>下图基于典型夏季日间数据，显示 <span class="text-danger">城市核心区</span> 与 <span class="text-success">绿地公园</span> 温差随时间的变化。</p>
+            <div id="chart"></div>
+        </section>
+
+        <!-- 结语 -->
+        <section>
+            <h2><span class="material-icons-outlined" aria-hidden="true">emoji_people</span> 行动起来</h2>
+            <p>无论是为楼顶铺设一片花园，还是在阳台栽种攀援植物，或参与社区雨水花园项目，每个人都能在绿色城市的未来中扮演角色。</p>
+        </section>
+    </div>
+
+    <!-- Prism 自动加载 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    <!-- 图表与流程图脚本 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        /* ————— ECharts 热岛示意 ————— */
+        const chartDom = document.getElementById('chart');
+        if (chartDom && window.echarts) {
+            const myChart = echarts.init(chartDom);
+            const hours = Array.from({length:24}, (_,i)=>i);
+            const urban = hours.map(h=>28 + 8*Math.sin((h-14)/24*Math.PI));
+            const park  = hours.map(h=>24 + 5*Math.sin((h-14)/24*Math.PI));
+            myChart.setOption({
+                tooltip:{trigger:'axis'},
+                legend:{data:['城市核心','绿地公园']},
+                xAxis:{type:'category',data:hours,name:'时'},
+                yAxis:{type:'value',name:'°C'},
+                series:[
+                    {name:'城市核心',type:'line',smooth:true,data:urban},
+                    {name:'绿地公园',type:'line',smooth:true,data:park}
+                ]
+            });
+        }
+
+        /* ————— Graphviz 海绵城市流程 ————— */
+        const graphOutput = document.getElementById('graph-output');
+        const zoomButton = document.getElementById('zoom-button');
+        const layoutToggleButton = document.getElementById('layout-toggle-button');
+        const downloadButton = document.getElementById('download-button');
+        const zoomModal = document.getElementById('zoom-modal');
+        const zoomContent = document.getElementById('zoom-content');
+        const closeZoomButton = document.getElementById('close-zoom');
+
+        let panzoomInstance = null;
+        let vizInstance = null;
+        let currentRankdir = 'LR'; // 默认水平布局
+        try { vizInstance = new Viz({worker:undefined}); } catch(e){ console.error(e); }
+
+        const baseDotString = `digraph SpongeCity {
+            graph [labelloc=t, label="海绵城市雨洪管理流程", fontsize=18, fontname="Inter, sans-serif", bgcolor="transparent", pad="0.5", splines=ortho];
+            node  [fontname="Inter, sans-serif", fontsize=11, style="filled,rounded", color="#666666", shape=box, margin="0.2,0.1"];
+            edge  [fontsize=9, fontname="Inter, sans-serif", color="#888888"];
+            A [label="降雨",     fillcolor="#BAE6FD"];
+            B [label="渗透",     fillcolor="#BBF7D0"];
+            C [label="滞蓄",     fillcolor="#FDE68A"];
+            D [label="净化",     fillcolor="#E9D5FF"];
+            E [label="再利用",   fillcolor="#FFD6A5"];
+            A -> B [label="雨水下渗"];
+            B -> C [label="雨水汇集"];
+            C -> D [label="污染物去除"];
+            D -> E [label="中水回用"];
+        }`;
+
+        const panzoomWheelHandler = e=>{ if(panzoomInstance){e.preventDefault();panzoomInstance.zoomWithWheel(e);} };
+
+        function updateLayoutButton(){ layoutToggleButton.textContent = currentRankdir==='TB'?'LR':'TB'; }
+        async function renderGraph(rankdir){
+            if(!vizInstance||!graphOutput) return;
+            layoutToggleButton.disabled = zoomButton.disabled = downloadButton.disabled = true;
+            graphOutput.innerHTML='<p style="padding:20px;text-align:center;color:#525860">正在生成布局...</p>';
+            let dot = baseDotString.replace(/rankdir="(LR|TB)"/,`rankdir="${rankdir}"`);
+            try{
+                const svg = await vizInstance.renderSVGElement(dot);
+                graphOutput.innerHTML=''; graphOutput.appendChild(svg);
+                const clone = svg.cloneNode(true); zoomContent.innerHTML=''; zoomContent.appendChild(clone);
+                if(panzoomInstance){panzoomInstance.destroy();}
+                panzoomInstance = Panzoom(clone,{maxZoom:15,minZoom:.05,contain:"outside",canvas:true});
+                zoomContent.addEventListener('wheel',panzoomWheelHandler,{passive:false});
+                currentRankdir = rankdir; updateLayoutButton();
+            }catch(err){graphOutput.innerHTML='<p style="color:#dc3545;text-align:center">渲染失败</p>';console.error(err);}
+            layoutToggleButton.disabled = zoomButton.disabled = downloadButton.disabled = false;
+        }
+
+        layoutToggleButton?.addEventListener('click',()=>renderGraph(currentRankdir==='TB'?'LR':'TB'));
+        zoomButton?.addEventListener('click',()=>{
+            zoomModal.style.display="flex";document.body.style.overflow="hidden";
+            panzoomInstance?.reset({animate:true,duration:300});
+            setTimeout(()=>panzoomInstance?.zoom(.85,{animate:true,duration:150}),60);
+            closeZoomButton.focus();
+        });
+        closeZoomButton?.addEventListener('click',()=>{zoomModal.style.display="none";document.body.style.overflow="";});
+        zoomModal?.addEventListener('click',e=>{if(e.target===zoomModal){zoomModal.style.display="none";document.body.style.overflow="";}});
+        document.addEventListener('keydown',e=>{if(e.key==="Escape"&&zoomModal.style.display==="flex"){zoomModal.style.display="none";document.body.style.overflow="";}});
+        downloadButton?.addEventListener('click',()=>{
+            const svg = graphOutput.querySelector('svg'); if(!svg) return;
+            const data = new Blob([new XMLSerializer().serializeToString(svg)],{type:"image/svg+xml"});
+            const url = URL.createObjectURL(data);
+            const link = document.createElement('a'); link.href=url; link.download="sponge_city_flow.svg";
+            document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+        });
+        renderGraph(currentRankdir);
+        if(window.Prism){Prism.highlightAll();}
+    });
+    </script>
+</body>
+</html>
