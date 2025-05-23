@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡爱好者全方位指南</title>
+    <!-- 图标 & 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <!-- Prism 语法高亮 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <!-- 数学公式 -->
+    <script>MathJax={chtml:{fontURL:'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}}</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async id="MathJax-script"></script>
+    <!-- Graphviz & Panzoom -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+<style>
+/* ------- 现代简洁的通用样式 ------- */
+html,body{height:100%;margin:0;scroll-behavior:smooth}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#364153;padding:10px;box-sizing:border-box;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.container{max-width:1100px;margin:10px auto;padding:20px;background-color:#fff;border-radius:.45rem;box-shadow:0 .35rem 1.2rem rgba(0,0,0,.06)}
+.material-icons-outlined{vertical-align:middle;font-size:1.15em;margin-right:.28em;line-height:1}
+h1,h2,h3,h4{display:flex;align-items:center;font-weight:600;line-height:1.3;color:#1f2937;margin:1.6em 0 .85em}
+h1{font-size:2.4rem;border-bottom:1px solid #dfe5ec;padding-bottom:.4em}
+h2{font-size:2rem;border-bottom:1px solid #eef2f5;padding-bottom:.45em}
+h3{font-size:1.6rem}
+h4{font-size:1.3rem;color:#525860}
+p{margin-bottom:1.25em;font-size:1.05rem;color:#4b5563}
+ul{padding-left:1.4em;margin-bottom:1.4em}
+li{margin-bottom:.6em}
+.text-primary{color:#007bff}.text-success{color:#28a745}.text-warning{color:#ff8f00}.text-accent{color:#17a2b8}
+.code-inline{background:#e9ecef;border-radius:.25rem;padding:.15em .35em;font-family:"Fira Code",monospace;font-size:.9em;color:#bf0045}
+/* 代码块 */
+pre[class*=language-]{padding:1.6em;margin:1.2em 0;border-radius:.45rem;background:#2d2d2d;overflow:auto;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #dde2e9}
+code[class*=language-]{font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;font-size:.95rem;line-height:1.55}
+/* 数学公式 */
+.math-formula{font-size:1.25em;padding:10px;text-align:center;border:1px solid #dfe5ec;border-radius:.45rem;background:#f0f3f7;margin:20px 0}
+/* Graphviz 容器 */
+#graph-container{width:100%;max-width:900px;margin:35px auto;padding-top:70px;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);position:relative;overflow:hidden;background:#fff}
+#graph-output{display:flex;justify-content:center;align-items:center;min-height:430px;padding:30px}
+#graph-output svg{display:block;width:100%;max-width:100%;height:auto}
+#graph-controls-container{position:absolute;top:18px;right:20px;display:flex;gap:14px;z-index:10}
+.graph-button{padding:8px 14px;background:rgba(50,50,50,.8);color:#f0f4f8;border:none;border-radius:.35rem;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 5px rgba(0,0,0,.12);transition:.18s ease}
+.graph-button:hover{background:rgba(30,30,30,.9);transform:translateY(-2px)}
+.graph-button:disabled{opacity:.62;cursor:not-allowed}
+.icon-spin{animation:spin 1.5s linear infinite}@keyframes spin{to{transform:rotate(1turn)}}
+/* Zoom 模态 */
+#zoom-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(25,28,32,.96);z-index:1000;justify-content:center;align-items:center;overflow:hidden}
+#zoom-content{width:95%;height:95%;background:#fff;border-radius:.9rem;box-shadow:0 24px 50px rgba(0,0,0,.35);display:flex;justify-content:center;align-items:center;overflow:hidden}
+#zoom-content svg{width:100%;height:100%;cursor:grab}
+#close-zoom{position:absolute;top:14px;right:14px;width:46px;height:46px;border-radius:50%;background:rgba(50,50,50,.85);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.22s ease}
+#close-zoom:hover{background:rgba(25,25,25,.95)}
+/* 响应式 */
+@media(max-width:768px){h1{font-size:2rem}h2{font-size:1.6rem}h3{font-size:1.35rem}#graph-container{padding-top:60px}}
+@media(max-width:480px){h1{font-size:1.75rem}h2{font-size:1.45rem}h3{font-size:1.2rem}}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="material-icons-outlined" aria-hidden="true">local_cafe</span><span class="text-primary">咖啡爱好者全方位指南</span></h1>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">emoji_people</span>咖啡文化简史</h2>
+        <p>从<span class="text-warning">埃塞俄比亚</span>的“舞动山羊”传说，到<span class="text-primary">意大利</span>的浓缩咖啡，再到<span class="text-success">第三波精品咖啡</span>浪潮，咖啡始终与<strong>社交</strong>、<strong>贸易</strong>与<strong>艺术</strong>紧密相连。如今，全球每天大约 <span class="code-inline">20 亿</span> 杯咖啡被享用。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">science</span>萃取原理与公式</h2>
+        <p>一杯风味平衡的手冲咖啡，通常目标萃取率在 <span class="code-inline">18&nbsp;–&nbsp;22 %</span> 之间。核心公式：</p>
+        <div class="math-formula">$$ \text{EY} = \frac{\text{TDS} \times V}{W_b} $$</div>
+        <p>其中 <span class="code-inline">TDS</span> 为溶解固形物百分比，<span class="code-inline">V</span> 是最终液体体积 (mL)，<span class="code-inline">W_b</span> 为干粉重量 (g)。<br>行内示例：目标咖啡液浓度 $ \text{TDS}=1.35\% $，当粉水比 $ R = 1:15 $ 时，萃取率大约为 $ \text{EY}=20\% $。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">code</span>冲煮参数计算器 (Python)</h2>
+<pre><code class="language-python">
+def brew_recipe(dose, ratio=15, tds_target=1.35, extraction_target=20):
+    """
+    简易手冲配方计算器
+    dose: 咖啡粉克数
+    ratio: 粉水比 (默认 1:15)
+    tds_target: 目标 TDS (%)
+    extraction_target: 目标萃取率 (%)
+    """
+    water = dose * ratio
+    beverage = water * 0.9   # 假设 10% 损耗
+    tds = tds_target
+    ey = (tds * beverage) / dose
+    ok = abs(ey - extraction_target) &lt; 1
+    print(f"总用水量: {water:.1f} g")
+    print(f"杯中液体: {beverage:.1f} g, 预估 TDS: {tds}%")
+    print(f"预估萃取率: {ey:.1f}% -> {'✅ 理想范围' if ok else '⚠️ 需调整'}")
+
+brew_recipe(18)   # 18 g 咖啡粉
+</code></pre>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">share</span>手冲咖啡流程图</h2>
+        <p>下图展示了典型 V60 手冲的关键步骤，可切换 <span class="text-accent">水平 / 垂直</span> 布局，并支持放大、下载。</p>
+
+        <div id="graph-container">
+            <div id="graph-controls-container">
+                <button id="zoom-button" class="graph-button" title="全屏查看">
+                    <span class="material-icons-outlined" aria-hidden="true">fullscreen</span> 全屏
+                </button>
+                <button id="layout-toggle-button" class="graph-button" title="切换布局"></button>
+                <button id="download-button" class="graph-button" title="下载 PNG">
+                    <span class="material-icons-outlined" aria-hidden="true">file_download</span> 下载
+                </button>
+            </div>
+            <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+        </div>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">tips_and_updates</span>冲煮小贴士</h2>
+        <ul>
+            <li><span class="material-icons-outlined" aria-hidden="true">water_drop</span>使用 <strong class="text-primary">90 – 96 ℃</strong> 的软水，硬度过高会抑制风味。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">coffee</span>研磨粗细以 <span class="text-success">“海盐颗粒”</span> 为参考，过细易过萃。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">timer</span>总萃取时间控制在 <span class="text-warning">2′30″ – 3′30″</span>，依据豆子品种微调。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">color_lens</span>浅烘豆子可适当提高水温以增强甜感。</li>
+        </ul>
+    </div>
+
+    <!-- Prism & Autoloader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    <!-- Graphviz 逻辑 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const graphOutput = document.getElementById('graph-output');
+        const zoomBtn = document.getElementById('zoom-button');
+        const layoutBtn = document.getElementById('layout-toggle-button');
+        const downloadBtn = document.getElementById('download-button');
+        const zoomModal = document.createElement('div');
+        zoomModal.id = 'zoom-modal';
+        zoomModal.innerHTML = `
+            <div id="zoom-content"></div>
+            <button id="close-zoom" aria-label="关闭"><span class="material-icons-outlined">close</span></button>`;
+        document.body.appendChild(zoomModal);
+        const zoomContent = document.getElementById('zoom-content');
+        const closeZoom = document.getElementById('close-zoom');
+
+        let viz, panzoomInst, currentDir='LR';
+
+        const dotBase = `
+        digraph Brew {
+            graph [labelloc=t, label="V60 手冲流程", fontsize=18, fontname="Inter, sans-serif", bgcolor="transparent", pad="0.5", splines=ortho];
+            node [fontname="Inter, sans-serif", fontsize=11, style="filled,rounded", shape=box, margin="0.2,0.1", color="#666666"];
+            edge [color="#888888", fontname="Inter, sans-serif", fontsize=9];
+
+            W [label="准备器具", fillcolor="#E3F2FD"];
+            G [label="称量&研磨", fillcolor="#FFECB3"];
+            R [label="润湿滤纸", fillcolor="#C8E6C9"];
+            B [label="预浸 30 s", fillcolor="#FFF9C4"];
+            P [label="分段注水", fillcolor="#FFE0B2"];
+            S [label="摇杯、静置", fillcolor="#D1C4E9"];
+            E [label="享用咖啡 ☕", fillcolor="#FFCDD2"];
+
+            W -> G -> R -> B -> P -> S -> E;
+        }`;
+
+        const renderGraph = async dir=>{
+            graphOutput.innerHTML = `<p style="padding:20px;text-align:center;color:#525860">正在生成 ${dir} 布局...</p>`;
+            if(!viz){viz = new Viz({worker: undefined});}
+            let dot = dotBase.replace('digraph Brew {','digraph Brew {\n  graph [rankdir="'+dir+'"];');
+            try{
+                const svg = await viz.renderSVGElement(dot);
+                graphOutput.innerHTML='';
+                graphOutput.appendChild(svg);
+                zoomContent.innerHTML='';
+                zoomContent.appendChild(svg.cloneNode(true));
+                if(panzoomInst) panzoomInst.destroy();
+                panzoomInst = Panzoom(zoomContent.querySelector('svg'),{maxZoom:15,minZoom:.06,contain:'outside',canvas:true});
+                zoomContent.addEventListener('wheel',e=>{e.preventDefault();panzoomInst.zoomWithWheel(e)},{passive:false});
+                currentDir=dir;
+                layoutBtn.textContent=(dir==='LR'?'TB':'LR');
+            }catch(err){
+                graphOutput.innerHTML=`<p style="color:#dc3545;padding:20px;text-align:center">渲染失败：${err.message}</p>`;
+            }
+        };
+
+        /* 初始渲染 */
+        renderGraph(currentDir);
+
+        layoutBtn.addEventListener('click',()=>renderGraph(currentDir==='LR'?'TB':'LR'));
+
+        zoomBtn.addEventListener('click',()=>{
+            zoomModal.style.display='flex';
+            document.body.style.overflow='hidden';
+            panzoomInst.reset();
+        });
+        closeZoom.addEventListener('click',()=>{zoomModal.style.display='none';document.body.style.overflow='';});
+        zoomModal.addEventListener('click',e=>{if(e.target===zoomModal){zoomModal.style.display='none';document.body.style.overflow='';}});
+
+        /* 下载 PNG */
+        downloadBtn.addEventListener('click',()=>{
+            const svgEl = graphOutput.querySelector('svg');
+            if(!svgEl){alert('没有可下载的图表');return;}
+            downloadBtn.disabled=true;downloadBtn.innerHTML='<span class="material-icons-outlined icon-spin">hourglass_empty</span>';
+            const svgData = new XMLSerializer().serializeToString(svgEl);
+            const img = new Image();const url = URL.createObjectURL(new Blob([svgData],{type:'image/svg+xml'}));
+            img.onload=()=>{
+                const canvas=document.createElement('canvas');
+                canvas.width=img.width*2;canvas.height=img.height*2;
+                const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.drawImage(img,0,0,canvas.width,canvas.height);
+                const link=document.createElement('a');
+                link.href=canvas.toDataURL('image/png');link.download='coffee_brew_'+currentDir+'.png';
+                document.body.appendChild(link);link.click();document.body.removeChild(link);
+                URL.revokeObjectURL(url);downloadBtn.disabled=false;downloadBtn.innerHTML='<span class="material-icons-outlined">file_download</span> 下载';
+            };
+            img.onerror=()=>{alert('转换失败');downloadBtn.disabled=false;downloadBtn.innerHTML='<span class="material-icons-outlined">file_download</span> 下载';};
+            img.src=url;
+        });
+
+        /* Prism 代码高亮 */
+        if(window.Prism&&Prism.highlightAll){Prism.highlightAll();}
+    });
+    </script>
+</body>
+</html>
