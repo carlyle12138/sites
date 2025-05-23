@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绿色城市交通指南</title>
+    <script>MathJax={chtml:{fontURL:'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}}</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+html,body{height:100%;margin:0;scroll-behavior:smooth}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#374151;padding:10px;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+.container{max-width:1100px;margin:10px auto;padding:20px;background-color:#fff;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06)}
+.material-icons-outlined{vertical-align:middle;font-size:1.15em;margin-right:.3em;line-height:1}
+h1>.material-icons-outlined,h2>.material-icons-outlined{font-size:1.1em;margin-right:.4em;color:#28a745}
+h3>.material-icons-outlined,h4>.material-icons-outlined,h5>.material-icons-outlined{font-size:1.05em;margin-right:.4em;color:#4a5568}
+h1,h2,h3,h4,h5{color:#1f2937;margin:1.8em 0 1em;font-weight:600;display:flex;align-items:center;line-height:1.3}
+h1{font-size:2.6rem;letter-spacing:-.7px;border-bottom:1px solid #dde2e9;padding-bottom:.5em;margin:0 0 .8em}
+h2{font-size:2.1rem;border-bottom:1px solid #eef2f5;padding-bottom:.55em}
+h3{font-size:1.7rem}h4{font-size:1.35rem;color:#525860}h5{font-size:1.15rem;color:#1f2937}
+p{margin-bottom:1.4em;color:#4b5563;font-size:1.05rem}
+strong{font-weight:600;color:#28a745}
+.math-formula{font-size:1.3em;padding:10px;background-color:#f0f3f7;border-radius:.45rem;text-align:center;margin:15px 0;overflow-x:auto;border:1px solid #dfe5ec}
+pre[class*=language-]{padding:1.6em;margin:1.2em 0;overflow:auto;border-radius:.45rem;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #dde2e9;background:#2d2d2d}
+code[class*=language-],pre[class*=language-]{font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;font-size:.93rem;line-height:1.5}
+:not(pre)>code{font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;background-color:#e9ecef;padding:.2em .4em;border-radius:.25rem;font-size:.9em;color:#bf0045}
+#echarts-container{width:100%;height:420px;border:1px solid #dde2e9;border-radius:.45rem;margin:20px 0;background:#fff}
+#graph-container{width:100%;max-width:900px;margin:25px auto;padding-top:70px;box-sizing:border-box;background-color:#fff;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);position:relative;overflow:hidden}
+#graph-output{display:flex;justify-content:center;align-items:center;min-height:450px;padding:30px;background-color:#fff}
+#graph-output svg{display:block;width:100%;max-width:100%;height:auto}
+#graph-controls-container{position:absolute;top:20px;right:20px;display:flex;gap:14px;z-index:10}
+.graph-button{padding:9px 15px;background-color:rgba(50,50,50,.8);color:#f0f4f8;border:none;border-radius:.35rem;cursor:pointer;font-size:.88rem;opacity:.9;transition:opacity .2s ease,background-color .2s ease,transform .15s ease,box-shadow .15s ease;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:500;line-height:1.2;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+.graph-button:hover{opacity:1;background-color:rgba(30,30,30,.9);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.18)}
+.graph-button:active{transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.graph-button:disabled{opacity:.65;cursor:not-allowed;background-color:rgba(50,50,50,.8);transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.graph-button .svg-icon{width:1.25em;height:1.25em;fill:currentColor}
+.graph-button .material-icons-outlined{font-size:1.4em;margin-right:0}
+#layout-toggle-button{min-width:48px;font-weight:500;font-size:1rem}
+#layout-toggle-button.loading .material-icons-outlined{font-size:1.4em}
+@keyframes spin{to{transform:rotate(1turn)}}
+.icon-spin{animation:spin 1.5s linear infinite;display:inline-block}
+#zoom-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(25,28,32,.95);z-index:1000;justify-content:center;align-items:center;overflow:hidden;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+#zoom-content{position:relative;width:97%;height:97%;background-color:#fff;overflow:hidden;display:flex;justify-content:center;align-items:center;border-radius:calc(.45rem * 2);box-shadow:0 25px 60px rgba(0,0,0,.35)}
+#zoom-content svg{max-width:none;max-height:none;width:100%;height:100%;cursor:grab;display:block}
+#zoom-content svg:active{cursor:grabbing}
+#close-zoom{position:absolute;top:12px;right:12px;background:rgba(50,50,50,.85);color:#fff;border:none;border-radius:50%;width:48px;height:48px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1001;transition:background-color .25s ease;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+#close-zoom:hover,#close-zoom:focus-visible{background:rgba(20,20,20,.95);outline:none}
+#close-zoom .material-icons-outlined{font-size:30px;margin-right:0}
+@media (max-width:768px){h1{font-size:2rem;margin-bottom:.7em}h2{font-size:1.6rem}h3{font-size:1.35rem}body{padding:10px;font-size:.96rem}}
+@media (max-width:480px){h1{font-size:1.7rem;margin-bottom:.6em}h2{font-size:1.4rem}h3{font-size:1.2rem}body{padding:5px}}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="material-icons-outlined" aria-hidden="true">directions_bike</span>绿色城市交通指南</h1>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">eco</span>什么是绿色城市交通？</h2>
+        <p>绿色城市交通指采用<code>低碳</code>、<code>高效率</code>且<code>可持续</code>的方式满足城市居民出行需求。例如公共交通、骑行、步行以及共享出行。这些方式不仅能够缓解拥堵，还可显著降低温室气体排放。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">calculate</span>碳排放计算</h2>
+        <p>碳排放强度通常用公式 <strong>$ I = \frac{E}{D} $</strong> 衡量，其中 <code>E</code> 为消耗能源产生的二氧化碳总量，<code>D</code> 为行驶距离。</p>
+        <div class="math-formula">$$ \text{节能率} = \frac{Q_{\text{传统}} - Q_{\text{绿色}}}{Q_{\text{传统}}}\times100\% $$</div>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">show_chart</span>交互式数据</h2>
+        <div id="echarts-container"></div>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">code</span>代码示例 (JavaScript)</h2>
+<pre><code class="language-javascript">
+function estimateCO2(distanceKm, mode){
+  const factor = { bus: 0.07, bike: 0, walk: 0, car: 0.192 };
+  return (factor[mode] ?? 0) * distanceKm;
+}
+console.log("骑行 5 km 预计排放:", estimateCO2(5, "bike"), "kg CO_2");
+</code></pre>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">schema</span>流程图</h2>
+        <div id="graph-container">
+            <div id="graph-controls-container">
+                <button id="zoom-button" class="graph-button" title="全屏查看与交互"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>全屏</button>
+                <button id="layout-toggle-button" class="graph-button" title="切换布局方向"></button>
+                <button id="download-button" class="graph-button" title="下载 PNG 图片"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>下载</button>
+            </div>
+            <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+        </div>
+        <div id="zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-modal-title">
+            <div id="zoom-content"></div>
+            <button id="close-zoom" title="关闭全屏" aria-label="关闭全屏"><span class="material-icons-outlined" aria-hidden="true">close</span></button>
+            <h2 id="zoom-modal-title" style="display:none">图表全屏交互视图</h2>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        /*  ECharts  */
+        const chartDom = document.getElementById('echarts-container');
+        if (chartDom && typeof echarts !== 'undefined') {
+            const myChart = echarts.init(chartDom);
+            const option = {
+                title:{text:'2015-2024 年出行方式占比',left:'center'},
+                tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+                legend:{bottom:0},
+                grid:{left:'3%',right:'4%',bottom:'15%',containLabel:true},
+                xAxis:{type:'category',data:['2015','2017','2019','2021','2023','2024']},
+                yAxis:{type:'value',name:'%'},
+                series:[
+                    {name:'公共交通',type:'bar',stack:'总量',data:[35,38,41,44,46,48]},
+                    {name:'骑行',type:'bar',stack:'总量',data:[5,6,7,9,10,11]},
+                    {name:'步行',type:'bar',stack:'总量',data:[18,17,16,15,15,15]},
+                    {name:'汽车',type:'bar',stack:'总量',data:[42,39,36,32,29,26]}
+                ]
+            };
+            myChart.setOption(option);
+            window.addEventListener('resize',()=>{myChart.resize();});
+        }
+
+        /*  Graphviz  */
+        const graphOutput = document.getElementById('graph-output');
+        const zoomButton = document.getElementById('zoom-button');
+        const layoutToggleButton = document.getElementById('layout-toggle-button');
+        const downloadButton = document.getElementById('download-button');
+        const zoomModal = document.getElementById('zoom-modal');
+        const zoomContent = document.getElementById('zoom-content');
+        const closeZoomButton = document.getElementById('close-zoom');
+
+        let panzoomInstance=null,vizInstance=null,currentRankdir='LR';
+        const downloadButtonOriginalHTML = downloadButton?.innerHTML;
+
+        const baseDotString=`digraph Transport{
+            graph [labelloc=t,label="城市绿色交通流程",fontsize=18,fontname="Inter, sans-serif",bgcolor="transparent",pad="0.5",splines=ortho];
+            node [fontname="Inter, sans-serif",fontsize=11,style="filled,rounded",color="#666666",shape=box,margin="0.2,0.1"];
+            edge [fontsize=9,fontname="Inter, sans-serif",color="#888888"];
+
+            A [label="居民出行需求",fillcolor="#E0E7FF"];
+            B [label="公共交通系统",fillcolor="#D1FAE5"];
+            C [label="低碳出行方式",fillcolor="#FEF3C7"];
+            D [label="减少碳排放",fillcolor="#CDE7B0"];
+
+            A -> B [label="规划"];
+            B -> C [label="推广"];
+            C -> D [label="结果"];
+        }`;
+
+        try{if(typeof Viz==='undefined')throw new Error();vizInstance=new Viz({worker:undefined});}catch(e){graphOutput.innerHTML='<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">Viz.js 初始化失败</p>';[zoomButton,layoutToggleButton,downloadButton].forEach(btn=>{if(btn)btn.disabled=true;});}
+
+        const panzoomWheelHandler=e=>{if(panzoomInstance&&panzoomInstance.zoomWithWheel){e.preventDefault();panzoomInstance.zoomWithWheel(e);}};
+
+        function updateLayoutButtonText(){
+            if(!layoutToggleButton)return;
+            const target=currentRankdir==='TB'?'LR':'TB';
+            layoutToggleButton.textContent=target;
+            layoutToggleButton.title=`切换到 ${target} 布局`;
+            layoutToggleButton.classList.remove('loading');
+        }
+
+        async function renderGraph(rankdir){
+            if(!vizInstance||!graphOutput||!zoomContent)return;
+            [layoutToggleButton,zoomButton,downloadButton].forEach(btn=>{if(btn)btn.disabled=true;});
+            if(layoutToggleButton){layoutToggleButton.innerHTML='<span class="material-icons-outlined icon-spin" aria-hidden="true">sync</span>';layoutToggleButton.classList.add('loading');}
+            graphOutput.innerHTML=`<p style="padding:20px;text-align:center;color:#525860">正在生成 ${rankdir} 布局...</p>`;
+
+            let dot=baseDotString.replace(/rankdir="?\w+"?/,'').replace(/digraph\s+Transport\s*\{/,match=>`${match}\n    graph [rankdir="${rankdir}"];`);
+            try{
+                const svgEl=await vizInstance.renderSVGElement(dot);
+                graphOutput.innerHTML="";graphOutput.appendChild(svgEl);
+                const cloned=svgEl.cloneNode(true);zoomContent.innerHTML="";zoomContent.appendChild(cloned);
+                const panzoomEl=zoomContent.querySelector('svg');
+                if(panzoomEl){
+                    if(panzoomInstance?.destroy){zoomContent.removeEventListener('wheel',panzoomWheelHandler);panzoomInstance.destroy();}
+                    panzoomInstance=Panzoom(panzoomEl,{maxZoom:15,minZoom:.05,contain:"outside",canvas:true,duration:200,easing:"ease-out"});
+                    zoomContent.addEventListener('wheel',panzoomWheelHandler,{passive:false});
+                }
+                currentRankdir=rankdir;
+            }catch(err){graphOutput.innerHTML=`<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">渲染失败: ${err.message}</p>`;}
+            finally{updateLayoutButtonText();[layoutToggleButton,zoomButton,downloadButton].forEach(btn=>{if(btn)btn.disabled=false;});}
+        }
+
+        async function downloadPNG(){
+            const svg=graphOutput.querySelector('svg');if(!svg)return alert("没有可供下载的图表。");
+            downloadButton.disabled=true;downloadButton.innerHTML='<span class="material-icons-outlined icon-spin" aria-hidden="true">hourglass_empty</span>处理中...';
+            try{
+                const svgXml=new XMLSerializer().serializeToString(svg);
+                const img=new Image();
+                const url=URL.createObjectURL(new Blob([svgXml],{type:"image/svg+xml;charset=utf-8"}));
+                img.onload=()=>{const canvas=document.createElement('canvas');const w=img.naturalWidth||800,h=img.naturalHeight||600;canvas.width=w*2;canvas.height=h*2;const ctx=canvas.getContext('2d');ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);const link=document.createElement('a');link.href=canvas.toDataURL("image/png");link.download=`transport_${currentRankdir.toLowerCase()}.png`;document.body.appendChild(link);link.click();document.body.removeChild(link);URL.revokeObjectURL(url);downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;};
+                img.onerror=()=>{alert("PNG 转换失败");URL.revokeObjectURL(url);downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;};
+                img.src=url;
+            }catch(e){alert(`错误: ${e.message}`);downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;}
+        }
+
+        if(graphOutput&&layoutToggleButton&&zoomButton&&downloadButton){
+            layoutToggleButton.addEventListener('click',()=>renderGraph(currentRankdir==='TB'?'LR':'TB'));
+            zoomButton.addEventListener('click',()=>{if(!panzoomInstance)return;zoomModal.style.display="flex";document.body.style.overflow="hidden";panzoomInstance.reset({animate:true,duration:300});setTimeout(()=>panzoomInstance.zoom(.9,{animate:true,duration:150}),50);closeZoomButton.focus();});
+            downloadButton.addEventListener('click',downloadPNG);
+            closeZoomButton.addEventListener('click',()=>{zoomModal.style.display="none";document.body.style.overflow="";});
+            zoomModal.addEventListener('click',e=>{if(e.target===zoomModal){zoomModal.style.display="none";document.body.style.overflow="";}});
+            document.addEventListener('keydown',e=>{if(e.key==="Escape"&&zoomModal.style.display==="flex"){zoomModal.style.display="none";document.body.style.overflow="";}});
+            if(vizInstance){updateLayoutButtonText();renderGraph(currentRankdir);}
+        }
+
+        if(typeof Prism!=='undefined'&&Prism.highlightAll)Prism.highlightAll();
+    });
+    </script>
+</body>
+</html>
