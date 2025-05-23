@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未来能源百科 · 氢能专题</title>
+
+    <!-- MathJax -->
+    <script>MathJax = {chtml: {fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+
+    <!-- Viz.js & Panzoom -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" defer></script>
+
+    <!-- Prism -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+/* ===== 样式（沿用模板，略有精简） ===== */
+html,body{height:100%;margin:0;scroll-behavior:smooth}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#374151;padding:10px;box-sizing:border-box}
+.container{max-width:1150px;margin:10px auto;padding:24px;background-color:#ffffff;border-radius:.5rem;box-shadow:0 6px 16px rgba(0,0,0,.06)}
+.material-icons-outlined{vertical-align:middle;font-size:1.15em;margin-right:.3em;line-height:1}
+h1,h2,h3,h4,h5{display:flex;align-items:center;color:#1f2937;margin:2em 0 1.1em;font-weight:600;line-height:1.3}
+h1{font-size:2.6rem;border-bottom:1px solid #e3e8f0;padding-bottom:.45em}
+h2{font-size:2.1rem;border-bottom:1px solid #eef2f5;padding-bottom:.5em}
+h3{font-size:1.6rem}
+h4{font-size:1.35rem}
+h5{font-size:1.1rem}
+p{margin-bottom:1.35em;font-size:1.05rem;color:#4b5563}
+.text-primary{color:#007bff}.text-secondary{color:#525860}.text-accent1{color:#17a2b8}.text-accent2{color:#28a745}.text-accent3{color:#ffc107}.text-danger{color:#dc3545;font-weight:700}
+.math-formula{font-size:1.25em;padding:12px;background:#f0f3f7;border-radius:.45rem;text-align:center;margin:1.2em 0;border:1px solid #dfe5ec}
+pre[class*=language-]{padding:1.7em;margin:1.2em 0;border-radius:.45rem;background:#2d2d2d;color:#f8f8f2;overflow:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+:not(pre)>code{background:#e9ecef;padding:.2em .45em;border-radius:.25rem;color:#c7254e;font-family:"Fira Code","Menlo",monospace;font-size:.9em}
+#chart{width:100%;max-width:900px;height:450px;margin:20px auto;border:1px solid #dfe5ec;border-radius:.45rem}
+#graph-container{width:100%;max-width:900px;margin:40px auto;padding-top:70px;border:1px solid #dfe5ec;border-radius:.45rem;position:relative;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);background:#fff}
+#graph-output{display:flex;justify-content:center;align-items:center;min-height:460px;padding:30px}
+#graph-output svg{display:block;width:100%;height:auto}
+#graph-controls-container{position:absolute;top:20px;right:20px;display:flex;gap:14px;z-index:10}
+.graph-button{padding:9px 15px;background:rgba(50,50,50,.82);color:#f0f4f8;border:none;border-radius:.35rem;font-size:.88rem;display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:.2s}
+.graph-button:hover{background:rgba(30,30,30,.9)}
+.icon-spin{animation:spin 1.45s linear infinite}@keyframes spin{to{transform:rotate(1turn)}}
+#zoom-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(25,28,32,.95);z-index:1200;justify-content:center;align-items:center;backdrop-filter:blur(7px)}
+#zoom-content{position:relative;width:96%;height:96%;background:#fff;border-radius:.65rem;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.33)}
+#zoom-content svg{width:100%;height:100%;cursor:grab}
+#close-zoom{position:absolute;top:12px;right:12px;width:46px;height:46px;border:none;border-radius:50%;background:rgba(50,50,50,.86);color:#fff;cursor:pointer}
+@media(max-width:768px){h1{font-size:2.15rem}h2{font-size:1.7rem}}
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1><span class="material-icons-outlined">bolt</span><span class="text-primary">未来能源百科</span><span class="text-secondary" style="margin-left:.4em">氢能专题</span></h1>
+
+    <h2><span class="material-icons-outlined">eco</span>氢能简介</h2>
+    <p>氢能被誉为<strong class="text-accent1">“终极清洁能源”</strong>。当氢气与氧气在燃料电池中反应时，唯一的副产物是水，大大减少了<span class="text-danger">温室气体</span>排放。</p>
+    <p>在未来城市中，氢能可广泛应用于交通运输、分布式发电与工业供热等场景。其能量密度按质量计约为&nbsp;<code>120&nbsp;MJ/kg</code>，是现有锂电池的 <em>10&nbsp;倍</em> 以上。</p>
+
+    <h3><span class="material-icons-outlined">calculate</span>热值与能量密度公式</h3>
+    <p>对任意燃料，理论可用能 $$\eta_\text{th}$$ 近似表达为：</p>
+    <div class="math-formula">
+        $$ \eta_\text{th} = \frac{H_\text{v}}{H_\text{v}+RT} $$
+    </div>
+    <p>其中 $H_\text{v}$ 为燃料燃烧热值，$R$ 为理想气体常数，$T$ 为绝对温度。对氢气而言，$H_\text{v}\approx 242\;\text{kJ mol}^{-1}$。</p>
+
+    <h3><span class="material-icons-outlined">code</span>Python 示例：燃料电池功率预测</h3>
+    <pre><code class="language-python">
+import numpy as np
+
+def fuel_cell_power(i_stack, u_ocv=1.1, r_internal=0.03):
+    """
+    简易燃料电池输出功率模型
+    i_stack      : 电流 (A)
+    u_ocv        : 开路电压 (V)
+    r_internal   : 内阻 (Ω)
+    """
+    u_stack = u_ocv - i_stack * r_internal
+    p_stack = u_stack * i_stack
+    return p_stack
+
+currents = np.linspace(0, 200, 5)
+powers = fuel_cell_power(currents)
+
+for i, p in zip(currents, powers):
+    print(f"电流: {i:>6.1f} A | 输出功率: {p:>7.2f} W")
+    </code></pre>
+
+    <h2><span class="material-icons-outlined">bar_chart</span>能量密度对比（ECharts）</h2>
+    <div id="chart" aria-label="不同燃料能量密度对比图"></div>
+
+    <h2><span class="material-icons-outlined">schema</span>氢能产业链流程（Graphviz）</h2>
+    <div id="graph-container">
+        <div id="graph-controls-container">
+            <button id="layout-toggle-button" class="graph-button" title="切换布局方向">TB</button>
+            <button id="zoom-button" class="graph-button" title="全屏查看">
+                <span class="material-icons-outlined">fullscreen</span>全屏
+            </button>
+            <button id="download-button" class="graph-button" title="下载 PNG">
+                <span class="material-icons-outlined">download</span>下载
+            </button>
+        </div>
+        <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+    </div>
+
+    <div id="zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-title">
+        <div id="zoom-content"></div>
+        <button id="close-zoom" aria-label="关闭全屏">
+            <span class="material-icons-outlined">close</span>
+        </button>
+        <h2 id="zoom-title" style="display:none">图表全屏视图</h2>
+    </div>
+</div>
+
+<script>
+/* ===== Prism ===== */
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Prism && Prism.highlightAll) Prism.highlightAll();
+});
+</script>
+
+<script>
+/* ===== ECharts: 能量密度对比 ===== */
+document.addEventListener('DOMContentLoaded', () => {
+    const chartDom = document.getElementById('chart');
+    if (!window.echarts || !chartDom) return console.warn('ECharts 未加载');
+    const myChart = echarts.init(chartDom);
+    myChart.setOption({
+        title: {text: '常见燃料质量能量密度', left: 'center'},
+        tooltip: {trigger: 'axis'},
+        xAxis: {type: 'category', data: ['氢气','汽油','柴油','锂电池']},
+        yAxis: {type: 'value', name: 'MJ / kg'},
+        series: [{
+            name: '能量密度',
+            type: 'bar',
+            data: [120, 46, 45, 13]
+        }],
+        grid: {left: '8%', right: '5%', bottom: '10%'}
+    });
+    window.addEventListener('resize', ()=> myChart.resize());
+});
+</script>
+
+<script>
+/* ===== Graphviz + Panzoom ===== */
+document.addEventListener('DOMContentLoaded', () => {
+    const graphOutput = document.getElementById('graph-output');
+    const layoutBtn   = document.getElementById('layout-toggle-button');
+    const zoomBtn     = document.getElementById('zoom-button');
+    const dlBtn       = document.getElementById('download-button');
+    const zoomModal   = document.getElementById('zoom-modal');
+    const zoomContent = document.getElementById('zoom-content');
+    const closeZoom   = document.getElementById('close-zoom');
+
+    let viz, panzoomInstance, currentDir = 'TB';
+
+    const dotBase = `
+    digraph H2Chain {
+        graph [labelloc=t, label="氢能产业链", fontsize=18, fontname="Inter, sans-serif", bgcolor="transparent", pad="0.5", splines=ortho];
+        node  [fontname="Inter, sans-serif", fontsize=11, style="filled,rounded", shape=box, color="#555555", margin="0.25,0.1"];
+        edge  [fontsize=9, fontname="Inter, sans-serif", color="#888888"];
+
+        A [label="可再生能源\n(风/光)",      fillcolor="#D1FAE5"];
+        B [label="电解制氢",                fillcolor="#E0E7FF"];
+        C [label="储存 & 压缩",            fillcolor="#FDE68A"];
+        D [label="运输",                    fillcolor="#FFE4E6"];
+        E [label="加氢站",                  fillcolor="#C7D2FE"];
+        F [label="燃料电池汽车",            fillcolor="#BBF7D0"];
+
+        A -> B [label="电能"];
+        B -> C [label="氢气"];
+        C -> D [label="高压罐车"];
+        D -> E [label="管道 / 车运"];
+        E -> F [label="加注"];
+    }`;
+
+    function renderGraph(rankdir='TB'){
+        if (!window.Viz){graphOutput.textContent='Viz.js 未加载';return;}
+        layoutBtn.textContent='…';
+        const dot = dotBase.replace(/rankdir=\"?\w+\"?/,`rankdir="${rankdir}"`)
+                           .replace('digraph H2Chain {',`digraph H2Chain {\n    rankdir="${rankdir}";`);
+        viz = new Viz();
+        viz.renderSVGElement(dot).then(svg=>{
+            graphOutput.innerHTML='';
+            graphOutput.appendChild(svg);
+            zoomContent.innerHTML='';
+            zoomContent.appendChild(svg.cloneNode(true));
+            currentDir = rankdir;
+            layoutBtn.textContent= rankdir==='TB' ? 'LR' : 'TB';
+
+            /* Panzoom */
+            if (panzoomInstance) panzoomInstance.destroy();
+            const pzTarget = zoomContent.querySelector('svg');
+            panzoomInstance = Panzoom(pzTarget,{maxZoom:12,minZoom:0.07,contain:'outside'});
+            zoomContent.addEventListener('wheel', e=>{
+                e.preventDefault();
+                panzoomInstance.zoomWithWheel(e);
+            },{passive:false});
+        }).catch(e=>{
+            console.error(e);
+            graphOutput.textContent='图形渲染失败';
+        });
+    }
+
+    function downloadPNG(){
+        const svgEl = graphOutput.querySelector('svg');
+        if(!svgEl) return alert('暂无可下载图表');
+        dlBtn.disabled = true; dlBtn.innerHTML='<span class="material-icons-outlined icon-spin">hourglass_empty</span>';
+        const svgData = new XMLSerializer().serializeToString(svgEl);
+        const img = new Image();
+        img.onload = ()=>{
+            const canvas=document.createElement('canvas');
+            canvas.width = img.naturalWidth*2;
+            canvas.height= img.naturalHeight*2;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(img,0,0,canvas.width,canvas.height);
+            const link=document.createElement('a');
+            link.download='hydrogen_chain.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            dlBtn.disabled=false;dlBtn.innerHTML='<span class="material-icons-outlined">download</span>下载';
+        };
+        img.src = 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svgData)));
+    }
+
+    /* 事件绑定 */
+    layoutBtn.addEventListener('click', ()=> renderGraph(currentDir==='TB'?'LR':'TB'));
+    zoomBtn.addEventListener('click', ()=>{
+        if(!panzoomInstance) return;
+        zoomModal.style.display='flex'; document.body.style.overflow='hidden';
+        panzoomInstance.reset();
+        setTimeout(()=> panzoomInstance.zoom(.9,{animate:true,duration:200}),50);
+    });
+    closeZoom.addEventListener('click', ()=>{zoomModal.style.display='none';document.body.style.overflow='';});
+    zoomModal.addEventListener('click', e=>{if(e.target===zoomModal){zoomModal.style.display='none';document.body.style.overflow='';}});
+    dlBtn.addEventListener('click', downloadPNG);
+
+    renderGraph(currentDir);
+});
+</script>
+</body>
+</html>
