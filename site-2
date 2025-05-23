@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机视觉科普指南</title>
+    <script>MathJax={chtml:{fontURL:'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}}</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        html,body{height:100%;margin:0;scroll-behavior:smooth}
+        body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#374151;padding:10px;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+        .container{max-width:1100px;margin:10px auto;padding:20px;background-color:#fff;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06)}
+        h1,h2,h3,h4,h5{color:#1f2937;margin:1.8em 0 1em;font-weight:600;display:flex;align-items:center;line-height:1.3}
+        h1{font-size:2.6rem;letter-spacing:-.7px;border-bottom:1px solid #dde2e9;padding-bottom:.5em;margin:.0 0 .8em}
+        h2{font-size:2.1rem;border-bottom:1px solid #eef2f5;padding-bottom:.55em}
+        h3{font-size:1.7rem}h4{font-size:1.35rem;color:#525860}h5{font-size:1.15rem;color:#1f2937}
+        .material-icons-outlined{vertical-align:middle;font-size:1.15em;margin-right:.3em;line-height:1}
+        .text-primary{color:#007bff}.text-secondary{color:#525860}.text-accent1{color:#17a2b8}.text-accent2{color:#28a745}.text-accent3{color:#ffc107}.text-danger{color:#dc3545;font-weight:700}.text-warning{color:#ff8f00;font-weight:700}.text-highlight-green{color:#20c997;font-weight:600}.text-highlight-blue{color:#339AF0;font-weight:600}.text-highlight-purple{color:#AE3EC9;font-weight:600}
+        p{margin-bottom:1.4em;color:#4b5563;font-size:1.05rem}
+        strong{font-weight:600;color:#007bff}
+        .math-formula{font-size:1.3em;padding:10px;background-color:#f0f3f7;border-radius:.45rem;text-align:center;margin:15px 0;overflow-x:auto;border:1px solid #dfe5ec}
+        pre[class*=language-]{padding:1.7em;margin:1.2em 0;overflow:auto;border-radius:.45rem;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #dde2e9;background:#2d2d2d}
+        code[class*=language-],pre[class*=language-]{font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;font-size:.93rem;line-height:1.5}
+        #graph-container{width:100%;max-width:900px;margin:25px auto;padding-top:70px;box-sizing:border-box;background-color:#fff;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);position:relative;overflow:hidden}
+        #graph-output{display:flex;justify-content:center;align-items:center;min-height:450px;padding:30px;background-color:#fff}
+        #graph-output svg{display:block;width:100%;max-width:100%;height:auto}
+        #graph-controls-container{position:absolute;top:20px;right:20px;display:flex;gap:14px;z-index:10}
+        .graph-button{padding:9px 15px;background-color:rgba(50,50,50,.8);color:#f0f4f8;border:none;border-radius:.35rem;cursor:pointer;font-size:.88rem;opacity:.9;transition:opacity .2s ease,background-color .2s ease,transform .15s ease,box-shadow .15s ease;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:500;line-height:1.2;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+        .graph-button:hover{opacity:1;background-color:rgba(30,30,30,.9);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.18)}
+        .graph-button:active{transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .graph-button:disabled{opacity:.65;cursor:not-allowed;background-color:rgba(50,50,50,.8);transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .graph-button .material-icons-outlined{font-size:1.4em;margin-right:0}
+        #layout-toggle-button{min-width:48px;font-weight:500;font-size:1rem}
+        #layout-toggle-button.loading .material-icons-outlined{font-size:1.4em}
+        @keyframes spin{to{transform:rotate(1turn)}}
+        .icon-spin{animation:spin 1.5s linear infinite;display:inline-block}
+        #zoom-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(25,28,32,.95);z-index:1000;justify-content:center;align-items:center;overflow:hidden;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+        #zoom-content{position:relative;width:97%;height:97%;background-color:#fff;overflow:hidden;display:flex;justify-content:center;align-items:center;border-radius:calc(.45rem * 2);box-shadow:0 25px 60px rgba(0,0,0,.35)}
+        #zoom-content svg{max-width:none;max-height:none;width:100%;height:100%;cursor:grab;display:block}
+        #zoom-content svg:active{cursor:grabbing}
+        #close-zoom{position:absolute;top:12px;right:12px;background:rgba(50,50,50,.85);color:#fff;border:none;border-radius:50%;width:48px;height:48px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1001;transition:background-color .25s ease;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+        #close-zoom:hover,#close-zoom:focus-visible{background:rgba(20,20,20,.95);outline:none}
+        #close-zoom .material-icons-outlined{font-size:30px;margin-right:0}
+        #accuracy-chart{width:100%;height:420px;margin:40px 0;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .3rem 1rem rgba(0,0,0,.05)}
+        @media (max-width:768px){body{padding:10px;font-size:.96rem}.container{padding:15px;margin:10px auto}h1{font-size:2rem;margin-bottom:.7em}h2{font-size:1.6rem}h3{font-size:1.35rem}h4{font-size:1.15rem}h5{font-size:1rem}pre[class*=language-]{font-size:.88rem;padding:1.2em}.math-formula{font-size:1.15em;padding:8px}#graph-container{padding-top:60px}}
+        @media (max-width:480px){body{padding:5px}.container{padding:10px;margin:5px auto}h1{font-size:1.7rem;margin-bottom:.6em}h2{font-size:1.4rem}h3{font-size:1.2rem}h4{font-size:1.05rem}h5{font-size:.95rem}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="material-icons-outlined" aria-hidden="true">center_focus_strong</span><span class="text-primary">计算机视觉科普指南</span></h1>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">visibility</span>计算机视觉的魅力</h2>
+        <p>计算机视觉（<strong class="text-highlight-blue">Computer Vision, CV</strong>）让机器拥有“看”与“理解”世界的能力，驱动自动驾驶、医疗影像诊断、工业检测等<span class="text-accent2">关键应用</span>。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">timeline</span>技术里程碑</h2>
+        <p><span class="text-accent1">1998</span> 年 <strong>LeNet-5</strong> 成功用于手写数字识别；<span class="text-accent1">2012</span> 年 <strong class="text-danger">AlexNet</strong> 引爆深度学习浪潮，自此 <strong class="text-warning">ImageNet Top-1</strong> 准确率突飞猛进。</p>
+        <div id="accuracy-chart"></div>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">psychology</span>核心原理</h2>
+        <h3>二维卷积</h3>
+        <p>卷积核在特征图上滑动并<strong class="text-highlight-green">提取局部模式</strong>：</p>
+        <div class="math-formula">$$
+        y(i,j)=\sum_{m}\sum_{n}x(i+m,\,j+n)\cdot k(m,n)
+        $$</div>
+
+        <h3>卷积神经网络（CNN）</h3>
+        <p>CNN 通过堆叠卷积层、池化层与全连接层，实现从像素到语义的层级特征抽象。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">terminal</span>示例代码：OpenCV 边缘检测</h2>
+        <pre><code class="language-python">
+import cv2
+
+img = cv2.imread("road.jpg", cv2.IMREAD_GRAYSCALE)
+edges = cv2.Canny(img, 100, 200)
+
+cv2.imshow("原图", img)
+cv2.imshow("边缘", edges)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+        </code></pre>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">apps</span>典型应用</h2>
+        <ul>
+            <li><span class="material-icons-outlined" aria-hidden="true">directions_car</span><strong>自动驾驶</strong>：识别车道线与行人。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">healing</span><strong>医学影像</strong>：辅助诊断病灶。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">factory</span><strong>工业质检</strong>：检测微小缺陷。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">smartphone</span><strong>移动端 AR</strong>：实时滤镜与测量。</li>
+        </ul>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">account_tree</span>视觉任务流程图</h2>
+        <div id="graph-container">
+            <div id="graph-controls-container">
+                <button id="zoom-button" class="graph-button" title="全屏查看与交互"><span class="material-icons-outlined" aria-hidden="true">zoom_out_map</span>全屏</button>
+                <button id="layout-toggle-button" class="graph-button" title="切换布局方向"></button>
+                <button id="download-button" class="graph-button" title="下载 PNG 图片"><span class="material-icons-outlined" aria-hidden="true">download</span>下载</button>
+            </div>
+            <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+        </div>
+        <div id="zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-modal-title">
+            <div id="zoom-content"></div>
+            <button id="close-zoom" title="关闭全屏" aria-label="关闭全屏"><span class="material-icons-outlined" aria-hidden="true">close</span></button>
+            <h2 id="zoom-modal-title" style="display:none">图表全屏交互视图</h2>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const graphOutput = document.getElementById('graph-output');
+        const zoomButton = document.getElementById('zoom-button');
+        const layoutToggleButton = document.getElementById('layout-toggle-button');
+        const downloadButton = document.getElementById('download-button');
+        const zoomModal = document.getElementById('zoom-modal');
+        const zoomContent = document.getElementById('zoom-content');
+        const closeZoomButton = document.getElementById('close-zoom');
+
+        let panzoomInstance = null;
+        let vizInstance = null;
+        let currentRankdir = 'LR';
+        const downloadButtonOriginalHTML = downloadButton?.innerHTML;
+
+        const baseDotString = `
+        digraph CVFlow {
+            graph [labelloc=t, label="计算机视觉任务流程", fontsize=18, fontname="Inter, sans-serif", bgcolor="transparent", pad="0.5", splines=ortho, rankdir="LR"];
+            node [fontname="Inter, sans-serif", fontsize=11, style="filled,rounded", color="#666666", shape=box, margin="0.2,0.1"];
+            edge [fontsize=9, fontname="Inter, sans-serif", color="#888888"];
+
+            A [label="数据采集", fillcolor="#E0E7FF"];
+            B [label="数据标注", fillcolor="#C7D2FE"];
+            C [label="数据增强", fillcolor="#A5B4FC"];
+            D [label="模型训练", fillcolor="#D1FAE5"];
+            E [label="模型评估", fillcolor="#FEF3C7"];
+            F [label="上线部署", fillcolor="#FECACA"];
+
+            A -> B [label="原始图像"];
+            B -> C [label="标注数据"];
+            C -> D [label="增强样本"];
+            D -> E [label="候选模型"];
+            E -> F [label="通过测试"];
+        }`;
+
+        try {
+            if (typeof Viz === 'undefined') throw new Error("Viz.js 未加载");
+            vizInstance = new Viz({ worker: undefined });
+        } catch {
+            graphOutput.innerHTML = '<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">Viz.js 初始化失败</p>';
+            [zoomButton, layoutToggleButton, downloadButton].forEach(btn => { if (btn) btn.disabled = true; });
+        }
+
+        const panzoomWheelHandler = event => {
+            if (panzoomInstance && panzoomInstance.zoomWithWheel) { event.preventDefault(); panzoomInstance.zoomWithWheel(event); }
+        };
+
+        function updateLayoutButtonText() {
+            if (!layoutToggleButton) return;
+            const target = currentRankdir === 'TB' ? 'LR' : 'TB';
+            layoutToggleButton.textContent = target;
+            layoutToggleButton.title = `切换到 ${target} 布局`;
+            layoutToggleButton.classList.remove('loading');
+        }
+
+        async function renderGraph(rankdir) {
+            if (!vizInstance) return;
+            const btns = [layoutToggleButton, zoomButton, downloadButton];
+            btns.forEach(b=>{if(b)b.disabled=true;});
+            if (layoutToggleButton) {
+                layoutToggleButton.innerHTML = '<span class="material-icons-outlined icon-spin" aria-hidden="true">sync</span>';
+                layoutToggleButton.classList.add('loading');
+            }
+            graphOutput.innerHTML = `<p style="padding:20px;text-align:center;color:#525860">正在生成 ${rankdir} 布局...</p>`;
+
+            let dot = baseDotString.replace(/rankdir="(TB|LR)"/, `rankdir="${rankdir}"`);
+            try {
+                const svg = await vizInstance.renderSVGElement(dot);
+                graphOutput.innerHTML = ""; graphOutput.appendChild(svg);
+
+                const clone = svg.cloneNode(true);
+                zoomContent.innerHTML = ""; zoomContent.appendChild(clone);
+
+                const panEl = zoomContent.querySelector('svg');
+                if (panEl) {
+                    if (panzoomInstance?.destroy) {
+                        panzoomInstance.getPan()?.parentElement.removeEventListener('wheel', panzoomWheelHandler);
+                        panzoomInstance.destroy();
+                    }
+                    panzoomInstance = Panzoom(panEl, { maxZoom: 15, minZoom: .05, contain:"outside", canvas:true, duration:200, easing:"ease-out"});
+                    zoomContent.addEventListener('wheel', panzoomWheelHandler,{passive:false});
+                }
+                currentRankdir = rankdir;
+            } catch (err) {
+                graphOutput.innerHTML = `<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">渲染失败: ${err.message}</p>`;
+            } finally {
+                updateLayoutButtonText();
+                btns.forEach(b=>{if(b)b.disabled=false;});
+            }
+        }
+
+        async function downloadPNG() {
+            const svg = graphOutput.querySelector('svg'); if (!svg) { alert("暂无图表可下载"); return; }
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = '<span class="material-icons-outlined icon-spin" aria-hidden="true">hourglass_empty</span>处理中…';
+            try {
+                const xml = new XMLSerializer().serializeToString(svg);
+                const blob = new Blob([xml], {type:"image/svg+xml;charset=utf-8"});
+                const url = URL.createObjectURL(blob);
+                const img = new Image();
+                img.onload = ()=>{ 
+                    const c=document.createElement('canvas');
+                    const w=img.naturalWidth||800,h=img.naturalHeight||600,scale=Math.min(3.5,8000/Math.max(w,h));
+                    c.width=Math.round(w*scale);c.height=Math.round(h*scale);
+                    const ctx=c.getContext('2d');ctx.fillStyle=getComputedStyle(graphOutput).backgroundColor||"#fff";
+                    ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);
+                    const link=document.createElement('a');link.href=c.toDataURL("image/png");
+                    link.download=`cv_flow_${currentRankdir.toLowerCase()}.png`;document.body.appendChild(link);link.click();
+                    document.body.removeChild(link);URL.revokeObjectURL(url);
+                    downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;
+                };
+                img.onerror=()=>{URL.revokeObjectURL(url);downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;};
+                img.src=url;
+            } catch {downloadButton.disabled=false;downloadButton.innerHTML=downloadButtonOriginalHTML;}
+        }
+
+        if (layoutToggleButton && zoomButton && downloadButton) {
+            layoutToggleButton.addEventListener('click',()=>renderGraph(currentRankdir==='TB'?'LR':'TB'));
+            zoomButton.addEventListener('click',()=>{ if(!panzoomInstance)return;zoomModal.style.display="flex";document.body.style.overflow="hidden";
+                panzoomInstance.reset({animate:true,duration:300});
+                setTimeout(()=>panzoomInstance.zoom(.9,{animate:true,duration:150}),50);
+                closeZoomButton.focus();});
+            downloadButton.addEventListener('click',downloadPNG);
+            closeZoomButton.addEventListener('click',()=>{zoomModal.style.display="none";document.body.style.overflow="";});
+            zoomModal.addEventListener('click',e=>{if(e.target===zoomModal){zoomModal.style.display="none";document.body.style.overflow="";}});
+            document.addEventListener('keydown',e=>{if(e.key==="Escape"&&zoomModal.style.display==="flex"){zoomModal.style.display="none";document.body.style.overflow="";}});
+            updateLayoutButtonText();
+            renderGraph(currentRankdir);
+        }
+
+        if (typeof Prism!=="undefined"&&Prism.highlightAll) Prism.highlightAll();
+
+        const chartDom=document.getElementById('accuracy-chart');
+        if(chartDom&&typeof echarts!=='undefined'){
+            const chart=echarts.init(chartDom);
+            const option={
+                title:{text:'ImageNet Top-1 准确率演进',left:'center'},
+                tooltip:{trigger:'axis'},
+                xAxis:{type:'category',data:['2012','2015','2017','2019','2021','2023','2024']},
+                yAxis:{type:'value',name:'准确率 %'},
+                series:[{name:'Top-1',type:'line',smooth:true,data:[63.3,77.0,82.7,85.3,88.6,90.9,91.8]}]
+            };
+            chart.setOption(option); window.addEventListener('resize',()=>chart.resize());
+        }
+    });
+    </script>
+</body>
+</html>
