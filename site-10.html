@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>家庭预算与理财指南</title>
+
+<!-- MathJax -->
+<script>
+MathJax = { chtml:{ fontURL:"https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2" } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+
+<!-- Prism 语法高亮 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+<!-- ECharts -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" defer></script>
+
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<!-- 字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --primary:#007bff;--secondary:#4b5563;--accent1:#17a2b8;--accent2:#28a745;--accent3:#ff8f00;--danger:#dc3545;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;scroll-behavior:smooth}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background:#f8faff;color:var(--secondary);padding:12px}
+h1,h2,h3,h4{font-weight:600;color:#1f2937;margin:1.8em 0 1em;display:flex;align-items:center;gap:.35em;line-height:1.3}
+h1{font-size:2.4rem;border-bottom:2px solid #dde2e9;padding-bottom:.4em;margin-top:0}
+h2{font-size:1.9rem;border-bottom:1px solid #eef2f5;padding-bottom:.4em}
+h3{font-size:1.4rem}
+p{margin:1em 0;font-size:1.05rem}
+.container{max-width:1100px;margin:auto;background:#fff;border-radius:.45rem;padding:24px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.material-icons-outlined{font-size:1.25em;vertical-align:middle}
+.text-primary{color:var(--primary)}
+.text-accent1{color:var(--accent1)}
+.text-accent2{color:var(--accent2)}
+.text-accent3{color:var(--accent3)}
+.text-danger{color:var(--danger)}
+.highlight{font-weight:700;color:var(--primary)}
+.math-box{font-size:1.3em;background:#f0f3f7;border:1px solid #dfe5ec;border-radius:.45rem;text-align:center;padding:10px;margin:18px 0;overflow-x:auto}
+pre[class*=language-]{padding:1.6em;margin:1.4em 0;overflow:auto;border-radius:.45rem;background:#2d2d2d;border:1px solid #3c3c3c;box-shadow:0 4px 12px rgba(0,0,0,.08);font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:.93rem;line-height:1.5}
+code:not(pre>code){background:#e9ecef;padding:.2em .4em;border-radius:.25rem;font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:.9em}
+#chart{width:100%;max-width:620px;height:420px;margin:35px auto 10px;border:1px solid #dde2e9;border-radius:.45rem}
+@media(max-width:768px){
+    body{padding:8px}
+    h1{font-size:2rem}
+    h2{font-size:1.6rem}
+    h3{font-size:1.25rem}
+}
+</style>
+</head>
+<body>
+<main class="container">
+    <h1><span class="material-icons-outlined" aria-hidden="true">account_balance_wallet</span><span class="text-primary">家庭预算与理财指南</span></h1>
+
+    <p>良好的<strong class="highlight">预算规划</strong>与<strong class="highlight">理财</strong>是构筑经济安全感的基石。本页面将通过<span class="text-accent1">规则解读</span>、<span class="text-accent2">数学公式</span>、<span class="text-accent3">可视化图表</span>与代码示例帮助你建立高效、可持续的个人/家庭财务系统。</p>
+
+    <!-- 50/30/20 规则 -->
+    <h2><span class="material-icons-outlined" aria-hidden="true">pie_chart</span>50 / 30 / 20 预算规则</h2>
+    <p>经典的 50 / 30 / 20 方法建议：<span class="text-accent2">$收入 \times 50\%$</span> 用于<span class="highlight">必要开支</span>，<span class="text-accent1">$收入 \times 30\%$</span> 用于<span class="highlight">可选消费</span>，<span class="text-primary">$收入 \times 20\%$</span> 用于<span class="highlight">储蓄或投资</span>。例如，若月收入为 <code>&yen; 20\,000</code>，则：</p>
+    <ul>
+        <li><span class="material-icons-outlined" aria-hidden="true">check_circle</span>必要支出：<kbd>&yen; 10 000</kbd></li>
+        <li><span class="material-icons-outlined" aria-hidden="true">check_circle</span>可选支出：<kbd>&yen; 6 000</kbd></li>
+        <li><span class="material-icons-outlined" aria-hidden="true">check_circle</span>储蓄 / 投资：<kbd>&yen; 4 000</kbd></li>
+    </ul>
+
+    <!-- 复利公式 -->
+    <h2><span class="material-icons-outlined" aria-hidden="true">calculate</span>复利的魔力</h2>
+    <p>假设你每月将 <span class="text-primary">20%</span> 收入投资于年化收益率 <code>r</code> 的资产，并按月计息，则 <span class="highlight">复利终值</span> 可由：</p>
+    <div class="math-box">$$ A = P \left(1 + \frac{r}{n}\right)^{\,n t} $$</div>
+    <p>其中 <code>P</code> 为本金，<code>n</code> 为一年复利次数（如 <code>12</code>），<code>t</code> 为投资年数。Inline 示例：若 <code>r = 6\%</code>，<code>n = 12</code>，则月利率约为 $ \frac{0.06}{12}=0.5\% $。</p>
+
+    <!-- Python 示例 -->
+    <h2><span class="material-icons-outlined" aria-hidden="true">code</span>Python 快速计算示例</h2>
+<pre><code class="language-python">
+from math import pow
+
+def future_value(p, r, n, years):
+    """计算复利终值"""
+    return p * pow(1 + r / n, n * years)
+
+# 假设每月储蓄 4000 元，年化收益率 6%，定投 10 年
+monthly_saving = 4000
+annual_rate = 0.06
+years = 10
+future = sum(future_value(monthly_saving, annual_rate, 12, years - i/12)
+             for i in range(years * 12))
+print(f"10 年后的本息合计：￥{future:,.2f}")
+</code></pre>
+
+    <!-- 图表 -->
+    <h2><span class="material-icons-outlined" aria-hidden="true">insights</span>预算分配可视化</h2>
+    <p>下图以饼图直观展示 50 / 30 / 20 规则：</p>
+    <div id="chart" role="img" aria-label="预算分配饼图"></div>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof echarts === "undefined") {
+            console.warn("ECharts 未加载");
+            return;
+        }
+        const chartDom = document.getElementById("chart");
+        const myChart = echarts.init(chartDom);
+        const option = {
+            tooltip:{trigger:"item",formatter:"{b}: {d}%"},
+            legend:{bottom:10,textStyle:{fontFamily:"Inter"}},
+            series:[{
+                name:"预算分配",
+                type:"pie",
+                radius:["40%","70%"],
+                avoidLabelOverlap:false,
+                label:{show:false},
+                emphasis:{label:{show:true,fontSize:18,fontWeight:"bold"}},
+                data:[
+                    {value:50,name:"必要开支(50%)"},
+                    {value:30,name:"可选消费(30%)"},
+                    {value:20,name:"储蓄/投资(20%)"}
+                ]
+            }]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize",()=>myChart.resize());
+    });
+    </script>
+
+    <!-- 小结 -->
+    <h2><span class="material-icons-outlined" aria-hidden="true">summarize</span>行动小结</h2>
+    <p class="text-accent2"><strong>1.</strong> 记录并分类所有支出，找出冗余。</p>
+    <p class="text-accent1"><strong>2.</strong> 坚持 50 / 30 / 20 模型，先储蓄后消费。</p>
+    <p class="text-danger"><strong>3.</strong> 通过 <code>自动转账</code>、<code>指数基金定投</code> 等方式降低惰性。</p>
+    <p class="text-primary"><strong>4.</strong> 定期复盘预算，逐步提高储蓄及投资比例。</p>
+</main>
+<script>if(typeof Prism!=="undefined"){Prism.highlightAll();}</script>
+</body>
+</html>
