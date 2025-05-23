@@ -1,262 +1,315 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EdgeWave Analytics | 边缘计算与实时数据智能平台</title>
-
-<style>
-:root{
-  --primary-bg:#0d47a1;
-  --primary-gradient:#1976d2;
-  --secondary-bg:#e3f2fd;
-  --accent-bg:#e8f5e9;
-  --neutral-bg:#f5f5f5;
-  --text-color:#212121;
-  --heading-color:#0d47a1;
-}
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC",
-        "Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  color:var(--text-color);
-  background:#ffffff;
-}
-
-/*–– 顶部 ––*/
-header.hero{
-  padding:60px 20px;
-  text-align:center;
-  background:linear-gradient(135deg,var(--primary-bg) 0%,var(--primary-gradient) 100%);
-  color:#fff;
-}
-header.hero h1{font-size:2.5rem;margin-bottom:10px;}
-header.hero h2{font-size:1.25rem;font-weight:400;opacity:.9;}
-
-/*–– 布局 ––*/
-main{
-  max-width:960px;
-  margin:40px auto;
-  padding:0 20px;
-  display:flex;
-  flex-direction:column;
-  gap:40px;
-}
-section{
-  border-radius:8px;
-  overflow:hidden;
-  box-shadow:0 2px 4px rgba(0,0,0,.08);
-}
-section>div{padding:30px 25px;}
-section.concept{background:var(--secondary-bg);}
-section.features{background:var(--accent-bg);}
-h3{color:var(--heading-color);margin-bottom:12px;font-size:1.5rem;}
-h4{margin:16px 0 8px;font-size:1.125rem;}
-
-/*–– 特性列表 ––*/
-section.features ul{list-style-type:"\25AA ";padding-left:1.2rem;}
-section.features li{margin-bottom:8px;}
-
-/*–– 高亮块 ––*/
-.highlight{
-  background:var(--neutral-bg);
-  padding:12px 16px;
-  border-left:4px solid var(--primary-gradient);
-  margin:16px 0;
-  border-radius:4px;
-}
-
-/*–– 流程图 ––*/
-.flow{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:16px;
-}
-.step{
-  min-width:140px;
-  padding:20px;
-  border-radius:8px;
-  background:#ffffff;
-  border:2px solid var(--primary-gradient);
-  position:relative;
-  text-align:center;
-  font-weight:600;
-}
-.step::after{
-  content:"\2192";                 /* &rarr; */
-  position:absolute;
-  right:-22px;
-  top:50%;
-  transform:translateY(-50%);
-}
-.step:last-child::after{display:none;}
-
-/*–– 未来趋势分支 ––*/
-.branch{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-top:10px;
-}
-.branch-item{
-  padding:14px 18px;
-  border-radius:6px;
-  border:1px dashed var(--primary-gradient);
-  background:#ffffff;
-}
-
-/*–– FAQ ––*/
-details{
-  background:#fff;
-  border:1px solid #ccc;
-  border-radius:6px;
-  margin-bottom:8px;
-}
-details summary{
-  padding:10px 14px;
-  font-weight:600;
-  cursor:pointer;
-}
-details p{padding:0 14px 14px;}
-
-/*–– 页脚 ––*/
-footer{
-  margin:60px 0 20px;
-  text-align:center;
-  font-size:.875rem;
-  color:#666;
-}
-footer ul{
-  list-style:none;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:12px;
-}
-footer li::before{
-  content:"\25A0 ";               /* ■ */
-  margin-right:4px;
-  color:var(--primary-gradient);
-}
-
-/*–– 响应式 ––*/
-@media(max-width:600px){
-  .step::after{display:none;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM 大模型科普指南</title>
+    <script>MathJax={chtml:{fontURL:'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'}}</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" defer></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        html,body{height:100%;margin:0;scroll-behavior:smooth}
+        body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.7;background-color:#f8faff;color:#374151;padding:10px;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+        .container{max-width:1100px;margin:10px auto;padding:20px;background-color:#fff;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06)}
+        h1,h2,h3,h4,h5{color:#1f2937;margin:1.8em 0 1em;font-weight:600;display:flex;align-items:center;line-height:1.3}
+        h1{font-size:2.6rem;letter-spacing:-.7px;border-bottom:1px solid #dde2e9;padding-bottom:.5em;margin:.0 0 .8em}
+        h2{font-size:2.1rem;border-bottom:1px solid #eef2f5;padding-bottom:.55em}
+        h3{font-size:1.7rem}h4{font-size:1.35rem;color:#525860}h5{font-size:1.15rem;color:#1f2937}
+        .material-icons-outlined{vertical-align:middle;font-size:1.15em;margin-right:.3em;line-height:1}
+        .text-primary{color:#007bff}.text-secondary{color:#525860}.text-accent1{color:#17a2b8}.text-accent2{color:#28a745}.text-accent3{color:#ffc107}.text-danger{color:#dc3545;font-weight:700}.text-warning{color:#ff8f00;font-weight:700}.text-highlight-green{color:#20c997;font-weight:600}.text-highlight-blue{color:#339AF0;font-weight:600}.text-highlight-purple{color:#AE3EC9;font-weight:600}
+        p{margin-bottom:1.4em;color:#4b5563;font-size:1.05rem}
+        strong{font-weight:600;color:#007bff}
+        .math-formula{font-size:1.3em;padding:10px;background-color:#f0f3f7;border-radius:.45rem;text-align:center;margin:15px 0;overflow-x:auto;border:1px solid #dfe5ec}
+        pre[class*=language-]{padding:1.7em;margin:1.2em 0;overflow:auto;border-radius:.45rem;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #dde2e9;background:#2d2d2d}
+        code[class*=language-],pre[class*=language-]{font-family:"Fira Code","SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;font-size:.93rem;line-height:1.5}
+        #graph-container{width:100%;max-width:900px;margin:25px auto;padding-top:70px;box-sizing:border-box;background-color:#fff;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .4rem 1.2rem rgba(0,0,0,.06);position:relative;overflow:hidden}
+        #graph-output{display:flex;justify-content:center;align-items:center;min-height:450px;padding:30px;background-color:#fff}
+        #graph-output svg{display:block;width:100%;max-width:100%;height:auto}
+        #graph-controls-container{position:absolute;top:20px;right:20px;display:flex;gap:14px;z-index:10}
+        .graph-button{padding:9px 15px;background-color:rgba(50,50,50,.8);color:#f0f4f8;border:none;border-radius:.35rem;cursor:pointer;font-size:.88rem;opacity:.9;transition:opacity .2s ease,background-color .2s ease,transform .15s ease,box-shadow .15s ease;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:500;line-height:1.2;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+        .graph-button:hover{opacity:1;background-color:rgba(30,30,30,.9);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.18)}
+        .graph-button:active{transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .graph-button:disabled{opacity:.65;cursor:not-allowed;background-color:rgba(50,50,50,.8);transform:translateY(0);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .graph-button .material-icons-outlined{font-size:1.4em;margin-right:0}
+        #layout-toggle-button{min-width:48px;font-weight:500;font-size:1rem}
+        #layout-toggle-button.loading .material-icons-outlined{font-size:1.4em}
+        @keyframes spin{to{transform:rotate(1turn)}}
+        .icon-spin{animation:spin 1.5s linear infinite;display:inline-block}
+        #zoom-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(25,28,32,.95);z-index:1000;justify-content:center;align-items:center;overflow:hidden;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+        #zoom-content{position:relative;width:97%;height:97%;background-color:#fff;overflow:hidden;display:flex;justify-content:center;align-items:center;border-radius:calc(.45rem * 2);box-shadow:0 25px 60px rgba(0,0,0,.35)}
+        #zoom-content svg{max-width:none;max-height:none;width:100%;height:100%;cursor:grab;display:block}
+        #zoom-content svg:active{cursor:grabbing}
+        #close-zoom{position:absolute;top:12px;right:12px;background:rgba(50,50,50,.85);color:#fff;border:none;border-radius:50%;width:48px;height:48px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1001;transition:background-color .25s ease;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+        #close-zoom:hover,#close-zoom:focus-visible{background:rgba(20,20,20,.95);outline:none}
+        #close-zoom .material-icons-outlined{font-size:30px;margin-right:0}
+        #params-chart{width:100%;height:420px;margin:40px 0;border:1px solid #dde2e9;border-radius:.45rem;box-shadow:0 .3rem 1rem rgba(0,0,0,.05)}
+        @media (max-width:768px){body{padding:10px;font-size:.96rem}.container{padding:15px;margin:10px auto}h1{font-size:2rem;margin-bottom:.7em}h2{font-size:1.6rem}h3{font-size:1.35rem}h4{font-size:1.15rem}h5{font-size:1rem}pre[class*=language-]{font-size:.88rem;padding:1.2em}.math-formula{font-size:1.15em;padding:8px}#graph-container{padding-top:60px}}
+        @media (max-width:480px){body{padding:5px}.container{padding:10px;margin:5px auto}h1{font-size:1.7rem;margin-bottom:.6em}h2{font-size:1.4rem}h3{font-size:1.2rem}h4{font-size:1.05rem}h5{font-size:.95rem}}
+    </style>
 </head>
-
 <body>
-<header class="hero">
-  <h1>EdgeWave Analytics</h1>
-  <h2>边缘计算与实时数据智能平台</h2>
-</header>
+    <div class="container">
+        <h1><span class="material-icons-outlined" aria-hidden="true">hub</span> <span class="text-primary">LLM 大模型科普指南</span></h1>
 
-<main>
-  <!-- 基础概念 -->
-  <section class="concept">
-    <div>
-      <h3>基础概念</h3>
-      <p><strong>边缘计算 (Edge Computing)</strong> 是一种在靠近数据源头的边缘节点
-         （例如 IoT 设备、微型数据中心）进行计算与存储的架构模式，
-         旨在降低延迟、节省带宽并提升实时数据处理能力。</p>
+        <h2><span class="material-icons-outlined" aria-hidden="true">lightbulb</span>为何关注 LLM？</h2>
+        <p>大型语言模型（<strong class="text-highlight-blue">Large Language Model, LLM</strong>）是近年来人工智能领域<strong class="text-highlight-green">最具变革性</strong>的技术之一。它们能够理解与生成自然语言，驱动智能助手、自动摘要、代码生成等多样化应用。</p>
 
-      <div class="highlight">
-        <p><u>核心定义</u>：将云端能力下沉至网络边缘，使数据在本地即可完成分析、决策与响应。</p>
-      </div>
+        <h2><span class="material-icons-outlined" aria-hidden="true">history</span>技术演进</h2>
+        <p><span class="text-accent1">2018</span> 年<strong>Transformer</strong>架构问世，随后 GPT、BERT、T5 等模型接连登场，模型参数量从 <strong class="text-warning">亿级</strong> 飙升至 <strong class="text-danger">万亿级</strong>。</p>
+
+        <div id="params-chart"></div>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">science</span>核心原理</h2>
+        <h3>自注意力机制</h3>
+        <p>自注意力能够在序列内部捕捉长距离依赖关系，其数学表述为：</p>
+        <div class="math-formula">$$\text{Attention}(Q,K,V)=\text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V$$</div>
+
+        <h3>参数规模与能力</h3>
+        <p>参数量越大，模型的任务泛化能力整体呈现<span class="text-accent2">非线性</span>增长，但<strong class="text-danger">计算与能耗</strong>成本同样急剧上升。</p>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">terminal</span>示例代码：PyTorch 推理</h2>
+        <pre><code class="language-python">
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+model_name = "gpt2-medium"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda")
+
+prompt = "大型语言模型将如何改变未来？"
+inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+with torch.no_grad():
+    outputs = model.generate(**inputs, max_new_tokens=60, temperature=0.8)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+        </code></pre>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">public</span>典型应用</h2>
+        <ul>
+            <li><span class="material-icons-outlined" aria-hidden="true">chat</span><strong>对话助手</strong>：提供实时问答与情感陪伴。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">code</span><strong>代码生成</strong>：加速开发流程。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">description</span><strong>自动摘要</strong>：快速提炼长文信息。</li>
+            <li><span class="material-icons-outlined" aria-hidden="true">translate</span><strong>多语翻译</strong>：降低语言壁垒。</li>
+        </ul>
+
+        <h2><span class="material-icons-outlined" aria-hidden="true">account_tree</span>训练流程可视化</h2>
+        <div id="graph-container">
+            <div id="graph-controls-container">
+                <button id="zoom-button" class="graph-button" title="全屏查看与交互"><span class="material-icons-outlined" aria-hidden="true">zoom_out_map</span>全屏</button>
+                <button id="layout-toggle-button" class="graph-button" title="切换布局方向"></button>
+                <button id="download-button" class="graph-button" title="下载 PNG 图片"><span class="material-icons-outlined" aria-hidden="true">download</span>下载</button>
+            </div>
+            <div id="graph-output"><p style="padding:20px;text-align:center;color:#525860">图表加载中...</p></div>
+        </div>
+        <div id="zoom-modal" role="dialog" aria-modal="true" aria-labelledby="zoom-modal-title">
+            <div id="zoom-content"></div>
+            <button id="close-zoom" title="关闭全屏" aria-label="关闭全屏"><span class="material-icons-outlined" aria-hidden="true">close</span></button>
+            <h2 id="zoom-modal-title" style="display:none">图表全屏交互视图</h2>
+        </div>
     </div>
-  </section>
 
-  <!-- 主要特点 -->
-  <section class="features">
-    <div>
-      <h3>主要特点</h3>
-      <ul>
-        <li>超低延迟 —— 毫秒级响应，适配工业控制、自动驾驶等场景</li>
-        <li>带宽优化 —— 仅将必要摘要上传云端，节省 70% 以上带宽</li>
-        <li>数据安全 —— 敏感数据本地处理，减少外部暴露面</li>
-        <li>分布式弹性 —— 万级节点协同，可按需扩缩容</li>
-        <li>模块化 SDK —— 快速集成，多语言支持</li>
-      </ul>
-    </div>
-  </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const graphOutput = document.getElementById('graph-output');
+        const zoomButton = document.getElementById('zoom-button');
+        const layoutToggleButton = document.getElementById('layout-toggle-button');
+        const downloadButton = document.getElementById('download-button');
+        const zoomModal = document.getElementById('zoom-modal');
+        const zoomContent = document.getElementById('zoom-content');
+        const closeZoomButton = document.getElementById('close-zoom');
 
-  <!-- 工作原理 -->
-  <section>
-    <div>
-      <h3>工作原理</h3>
-      <div class="flow">
-        <div class="step">采集<br>Sensor</div>
-        <div class="step">预处理<br>Edge Node</div>
-        <div class="step">本地 AI 推理<br>Inference</div>
-        <div class="step">结果汇聚<br>Aggregator</div>
-        <div class="step">云端洞察<br>Cloud</div>
-      </div>
-    </div>
-  </section>
+        let panzoomInstance = null;
+        let vizInstance = null;
+        let currentRankdir = 'LR';
+        const downloadButtonOriginalHTML = downloadButton?.innerHTML;
 
-  <!-- 应用场景 -->
-  <section style="background:#fff3e0;">
-    <div>
-      <h3>应用场景</h3>
-      <p>EdgeWave Analytics 已在以下行业落地：</p>
-      <ol>
-        <li>智慧工厂：实时质检与设备预测性维护</li>
-        <li>零售连锁：客流分析与动态数字标牌</li>
-        <li>智能交通：路侧感知与信号灯优化</li>
-        <li>能源电网：变电站巡检与异常检测</li>
-      </ol>
-    </div>
-  </section>
+        const baseDotString = `
+        digraph LLMFlow {
+            graph [labelloc=t, label="LLM 训练与部署流程", fontsize=18, fontname="Inter, sans-serif", bgcolor="transparent", pad="0.5", splines=ortho, rankdir="LR"];
+            node [fontname="Inter, sans-serif", fontsize=11, style="filled,rounded", color="#666666", shape=box, margin="0.2,0.1"];
+            edge [fontsize=9, fontname="Inter, sans-serif", color="#888888"];
 
-  <!-- 未来趋势 -->
-  <section style="background:#f1f8e9;">
-    <div>
-      <h3>未来趋势</h3>
-      <div class="branch">
-        <div class="branch-item">边云协同进一步智能调度</div>
-        <div class="branch-item">AI Model Compression &amp; TinyML 普及</div>
-        <div class="branch-item">可信执行环境 (TEE) 强化边缘安全</div>
-        <div class="branch-item">无服务器 (Serverless) 在边缘侧落地</div>
-      </div>
-    </div>
-  </section>
+            A [label="数据收集", fillcolor="#E0E7FF"];
+            B [label="数据清洗", fillcolor="#C7D2FE"];
+            C [label="预训练", fillcolor="#D1FAE5"];
+            D [label="微调", fillcolor="#FEF3C7"];
+            E [label="评估", fillcolor="#FDE68A"];
+            F [label="部署服务", fillcolor="#FECACA"];
 
-  <!-- FAQ -->
-  <section style="background:#e0f7fa;">
-    <div>
-      <h3>常见问题解答</h3>
+            A -> B [label="原始数据"];
+            B -> C [label="规范化语料"];
+            C -> D [label="基础模型"];
+            D -> E [label="任务模型"];
+            E -> F [label="通过测试"];
+        }`;
 
-      <details>
-        <summary>EdgeWave 是否兼容现有云平台？</summary>
-        <p>是。平台通过标准化 API 与 Kubernetes Operator 接入 AWS、Azure、GCP 及私有云。</p>
-      </details>
+        try {
+            if (typeof Viz === 'undefined') throw new Error("Viz.js 未加载");
+            vizInstance = new Viz({ worker: undefined });
+        } catch (e) {
+            graphOutput.innerHTML = '<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">Viz.js 初始化失败</p>';
+            [zoomButton, layoutToggleButton, downloadButton].forEach(btn => { if (btn) btn.disabled = true; });
+        }
 
-      <details>
-        <summary>部署一套边缘集群需要哪些硬件？</summary>
-        <p>最低配置为 4 核 CPU、8 GB 内存的小型工业 PC；亦支持 GPU/NPU 加速模块。</p>
-      </details>
+        const panzoomWheelHandler = event => {
+            if (panzoomInstance && panzoomInstance.zoomWithWheel) {
+                event.preventDefault();
+                panzoomInstance.zoomWithWheel(event);
+            }
+        };
 
-      <details>
-        <summary>如何保证远程维护的安全性？</summary>
-        <p>内置基于 <abbr title="零信任网络访问">ZTNA</abbr> 的细粒度访问控制，
-           所有指令与数据均采用 TLS 1.3 加密。</p>
-      </details>
-    </div>
-  </section>
-</main>
+        function updateLayoutButtonText() {
+            if (!layoutToggleButton) return;
+            const targetLayout = currentRankdir === 'TB' ? 'LR' : 'TB';
+            layoutToggleButton.textContent = targetLayout;
+            layoutToggleButton.title = `切换到 ${targetLayout} 布局`;
+            layoutToggleButton.classList.remove('loading');
+        }
 
-<footer>
-  <p>© 2025 EdgeWave Analytics — Innovating at the Edge</p>
-  <ul>
-    <li><a href="#" title="产品白皮书 (PDF)">产品白皮书</a></li>
-    <li><a href="#" title="开源 SDK">开源 SDK</a></li>
-    <li><a href="#" title="GitHub 仓库">GitHub</a></li>
-    <li><a href="#" title="联系我们">联系</a></li>
-  </ul>
-</footer>
+        async function renderGraph(rankdir) {
+            if (!vizInstance) return;
+            const buttons = [layoutToggleButton, zoomButton, downloadButton];
+            buttons.forEach(btn => { if (btn) btn.disabled = true; });
+            if (layoutToggleButton) {
+                layoutToggleButton.innerHTML = '<span class="material-icons-outlined icon-spin" aria-hidden="true">sync</span>';
+                layoutToggleButton.classList.add('loading');
+            }
+            graphOutput.innerHTML = `<p style="padding:20px;text-align:center;color:#525860">正在生成 ${rankdir} 布局...</p>`;
+
+            let dot = baseDotString.replace(/rankdir="(TB|LR)"/, `rankdir="${rankdir}"`);
+            try {
+                const svg = await vizInstance.renderSVGElement(dot);
+                graphOutput.innerHTML = "";
+                graphOutput.appendChild(svg);
+
+                const clone = svg.cloneNode(true);
+                zoomContent.innerHTML = "";
+                zoomContent.appendChild(clone);
+
+                const panzoomElement = zoomContent.querySelector('svg');
+                if (panzoomElement) {
+                    if (panzoomInstance && panzoomInstance.destroy) {
+                        panzoomInstance.getPan()?.parentElement.removeEventListener('wheel', panzoomWheelHandler);
+                        panzoomInstance.destroy();
+                    }
+                    panzoomInstance = Panzoom(panzoomElement, { maxZoom: 15, minZoom: .05, contain: "outside", canvas: true, duration: 200, easing: "ease-out" });
+                    zoomContent.addEventListener('wheel', panzoomWheelHandler, { passive: false });
+                }
+                currentRankdir = rankdir;
+            } catch (error) {
+                graphOutput.innerHTML = `<p style="color:#dc3545;text-align:center;padding:20px;font-weight:500">渲染失败: ${error.message}</p>`;
+            } finally {
+                updateLayoutButtonText();
+                buttons.forEach(btn => { if (btn) btn.disabled = false; });
+            }
+        }
+
+        async function downloadPNG() {
+            const svgElement = graphOutput.querySelector('svg');
+            if (!svgElement) { alert("暂无图表可下载"); return; }
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = '<span class="material-icons-outlined icon-spin" aria-hidden="true">hourglass_empty</span>处理中…';
+
+            try {
+                const svgXml = new XMLSerializer().serializeToString(svgElement);
+                const img = new Image();
+                const svgBlob = new Blob([svgXml], { type: "image/svg+xml;charset=utf-8" });
+                const url = URL.createObjectURL(svgBlob);
+
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const width = img.naturalWidth || 800;
+                    const height = img.naturalHeight || 600;
+                    const scale = Math.min(3.5, 8000 / Math.max(width, height));
+                    canvas.width = Math.round(width * scale);
+                    canvas.height = Math.round(height * scale);
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = getComputedStyle(graphOutput).backgroundColor || "#fff";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = `llm_flow_${currentRankdir.toLowerCase()}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = downloadButtonOriginalHTML;
+                };
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = downloadButtonOriginalHTML;
+                };
+                img.src = url;
+            } catch (error) {
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = downloadButtonOriginalHTML;
+            }
+        }
+
+        if (layoutToggleButton && zoomButton && downloadButton) {
+            layoutToggleButton.addEventListener('click', () => renderGraph(currentRankdir === 'TB' ? 'LR' : 'TB'));
+            zoomButton.addEventListener('click', () => {
+                if (!panzoomInstance) return;
+                zoomModal.style.display = "flex";
+                document.body.style.overflow = "hidden";
+                panzoomInstance.reset({ animate: true, duration: 300 });
+                setTimeout(() => panzoomInstance.zoom(.9, { animate: true, duration: 150 }), 50);
+                closeZoomButton.focus();
+            });
+            downloadButton.addEventListener('click', downloadPNG);
+            closeZoomButton.addEventListener('click', () => {
+                zoomModal.style.display = "none";
+                document.body.style.overflow = "";
+            });
+            zoomModal.addEventListener('click', event => {
+                if (event.target === zoomModal) {
+                    zoomModal.style.display = "none";
+                    document.body.style.overflow = "";
+                }
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === "Escape" && zoomModal.style.display === "flex") {
+                    zoomModal.style.display = "none";
+                    document.body.style.overflow = "";
+                }
+            });
+            updateLayoutButtonText();
+            renderGraph(currentRankdir);
+        }
+
+        if (typeof Prism !== 'undefined' && Prism.highlightAll) Prism.highlightAll();
+
+        const chartDom = document.getElementById('params-chart');
+        if (chartDom && typeof echarts !== 'undefined') {
+            const myChart = echarts.init(chartDom);
+            const option = {
+                title:{text:'模型参数量级与发布年份',left:'center'},
+                tooltip:{trigger:'axis'},
+                xAxis:{type:'category',data:['2018','2019','2020','2021','2022','2023','2024']},
+                yAxis:{type:'log',name:'参数量(亿)'},
+                series:[{
+                    name:'参数量',
+                    type:'line',
+                    smooth:true,
+                    data:[1.1,15,175,1350,5400,10000,17500]
+                }]
+            };
+            myChart.setOption(option);
+            window.addEventListener('resize', () => { myChart.resize(); });
+        }
+    });
+    </script>
 </body>
 </html>
